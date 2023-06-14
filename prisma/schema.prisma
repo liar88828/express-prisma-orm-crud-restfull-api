@@ -11,10 +11,23 @@ datasource db {
 }
 
 model User {
-  username String  @id @db.VarChar(100) // id
-  password String  @db.VarChar(100)
-  name     String  @db.VarChar(100)
-  token    String? @db.VarChar(100) // boleh null
+  username String    @id @db.VarChar(100) // id
+  password String    @db.VarChar(100)
+  name     String    @db.VarChar(100)
+  token    String?   @db.VarChar(100) // boleh null
+  contact  Contact[]
 
   @@map("users") // nama table
+}
+
+model Contact {
+  id        Int     @id @default(autoincrement())
+  firstName String  @db.VarChar(100)
+  lastName  String? @db.VarChar(100)
+  email     String? @db.VarChar(200)
+  phone     String? @db.VarChar(20)
+  username  String  @db.VarChar(100) // id realsi
+  user      User    @relation(fields: [username], references: [username])
+
+  @@map("contacts")
 }
