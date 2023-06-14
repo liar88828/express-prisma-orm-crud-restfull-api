@@ -1,0 +1,8 @@
+create prisma init
+npx prisma init
+
+create table only
+npx prisma migrate dev --skip-generate --create-only
+
+migrate to database
+npx prisma migrate dev --skip-generate 
