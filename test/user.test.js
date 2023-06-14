@@ -154,9 +154,7 @@ describe('PATCH /api/users/current', () => {
     await createTestUser()
   })
 
-  afterEach(async () => {
-    await removeAfterTestUser()
-  })
+  afterEach(async () => await removeAfterTestUser())
 
   it('should can update user ', async function () {
     const result = await supertest(web)
@@ -178,6 +176,7 @@ describe('PATCH /api/users/current', () => {
   });
 
   it('should can update user name only ', async function () {
+
     const result = await supertest(web)
     .patch('/api/users/current')
     .set('Authorization', 'test')
@@ -221,4 +220,37 @@ describe('PATCH /api/users/current', () => {
 
   });
 
+})
+
+describe('DELETE /api/users/logout', () => {
+
+  beforeEach(async () => {
+    await createTestUser()
+  })
+
+  afterEach(async () => await removeAfterTestUser())
+
+  it('should can logout', async function () {
+    const result = await supertest(web)
+    .delete('/api/users/logout')
+    .set('Authorization', "test")
+
+    logger.info(result.body)
+
+    expect(result.status).toBe(200)
+    expect(result.body.data).toBe("OK")
+
+    const user = await getUserTest()
+    expect(user.token).toBeNull()
+  });
+
+  it('should be reject token is invalid', async function () {
+    const result = await supertest(web)
+    .delete('/api/users/logout')
+    .set('Authorization', "salah")
+
+    logger.info(result.body)
+
+    expect(result.status).toBe(401)
+  });
 })

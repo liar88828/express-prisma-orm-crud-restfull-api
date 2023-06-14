@@ -1,4 +1,4 @@
-import { getServices, loginServices, updateServices, UserServices } from '../services/userServices.js'
+import { getServices, loginServices, logoutServices, updateServices, UserServices } from '../services/userServices.js'
 
 export const registerController = async (req, res, next) => {
   try {
@@ -39,6 +39,16 @@ export const updateController = async (req, res, next) => {
     res
     .status(200)
     .json({ data: result })
+  } catch ( e ) {
+    next(e)
+  }
+}
+export const logoutController = async (req, res, next) => {
+  try {
+    await logoutServices(req.user.username)
+    res
+    .status(200)
+    .json({ data: 'OK' })
   } catch ( e ) {
     next(e)
   }
