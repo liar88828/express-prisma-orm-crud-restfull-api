@@ -3,5 +3,6 @@
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/prisma/migrations/20230614055300_create_table_user/migration.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/prisma/migrations/20230614060605_create_table_contacts/migration.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/prisma/migrations/20230614061306_create_table_addresses/migration.sql" dialect="MySQL" />
   </component>
 </project>
