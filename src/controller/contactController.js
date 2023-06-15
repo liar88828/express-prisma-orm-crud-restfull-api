@@ -2,6 +2,7 @@ import {
   contactCreateServices,
   contactDeleteServices,
   contactGetServices,
+  contactSearchServices,
   contactUpdateServices
 } from "../services/contactServices.js";
 
@@ -53,4 +54,23 @@ export const contactDeleteController = async (req, res, next) => {
     next(e)
   }
 
+}
+export const contactSearchController = async (req, res, next) => {
+  try {
+    const user = req.user
+    const request = {
+      name: req.query.name,
+      email: req.query.email,
+      phone: req.query.phone,
+      page: req.query.page,
+      size: req.query.size,
+    }
+    const result = await contactSearchServices(user, request)
+    res.status(200).json({
+      data: result.data,
+      paging: result.paging
+    })
+  } catch ( e ) {
+    next(e)
+  }
 }

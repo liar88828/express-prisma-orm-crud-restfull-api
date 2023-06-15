@@ -1,6 +1,7 @@
 import {
   createContactValidation,
   getContactValidation,
+  searchContactValidation,
   updateContactValidation
 } from "../validation/contactValidation.js";
 import { validate } from "../validation/validation.js";
@@ -81,4 +82,56 @@ export const contactDeleteServices = async (user, contactId) => {
     where: { id: contactId }
   })
 
+}
+
+export const contactSearchServices = async (user, request) => {
+  request = validate(searchContactValidation, request)
+
+  //1 (page - 1 * size) = 0
+  //1 (page - 2 * size) = 10
+  const skip = ( request.page - 1 ) * request.size
+
+  let filters = []
+  filters.push({ username: user.username })
+  if (request.name) {
+    filters.push({
+      OR: [
+        { firstName: { contains: request.name } },
+        { lastName: { contains: request.name } }
+      ]
+    })
+  }
+
+  if (request.email) {
+    filters.push(
+      { email: { contains: request.email } },
+    )
+  }
+
+  if (request.phone) {
+    filters.push(
+      { phone: { contains: request.phone } },
+    )
+  }
+
+  const contacts = await prismaClient.contact.findMany({
+    where: { AND: filters },
+    take: request.size,
+    skip: skip
+  })
+
+  const totalItems = await prismaClient.contact.count({
+    where: { AND: filters }
+  })
+  // console.log(totalItems)//15
+  // console.log(contacts.length)//10
+
+  return {
+    data: contacts,
+    paging: {
+      page: request.page,
+      totalItems: totalItems,
+      totalPage: Math.ceil(totalItems / request.size)
+    }
+  }
 }

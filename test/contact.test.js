@@ -1,5 +1,6 @@
 import {
   createContactTest,
+  createManyContactTest,
   createTestUser,
   getTestContact,
   removeAfterTestUser,
@@ -170,6 +171,91 @@ describe('DELETE /api/contacts/:contactId', () => {
     .set('Authorization', 'test')
 
     expect(result.status).toBe(404)
+  });
+
+})
+
+describe('GET /api/contacts/', () => {
+  beforeEach(async () => {
+    await createTestUser()
+    await createManyContactTest()
+  })
+  afterEach(async () => {
+    await removeAllTestContact()
+    await removeAfterTestUser()
+  })
+
+  it('should can search ', async function () {
+    const result = await supertest(web)
+    .get('/api/contacts')
+    .set('Authorization', 'test')
+
+    logger.info(result.body)
+    expect(result.status).toBe(200)
+    expect(result.body.data.length).toBe(10)
+    expect(result.body.paging.page).toBe(1)
+    expect(result.body.paging.totalPage).toBe(2)
+    expect(result.body.paging.totalItems).toBe(15)
+  });
+
+  it('should can search to page 2', async function () {
+    const result = await supertest(web)
+    .get('/api/contacts')
+    .query({
+      page: 2
+    })
+    .set('Authorization', 'test')
+
+    expect(result.status).toBe(200)
+    expect(result.body.data.length).toBe(5)
+    expect(result.body.paging.page).toBe(2)
+    expect(result.body.paging.totalPage).toBe(2)
+    expect(result.body.paging.totalItems).toBe(15)
+  });
+
+  it('should can search using name', async function () {
+    const result = await supertest(web)
+    .get('/api/contacts')
+    .query({
+      name: 'test 1'
+    })
+    .set('Authorization', 'test')
+
+    expect(result.status).toBe(200)
+    expect(result.body.data.length).toBe(6)
+    expect(result.body.paging.page).toBe(1)
+    expect(result.body.paging.totalPage).toBe(1)
+    expect(result.body.paging.totalItems).toBe(6)
+  });
+
+  it('should can search using email', async function () {
+    const result = await supertest(web)
+    .get('/api/contacts')
+    .query({
+      email: 'test1'
+    })
+    .set('Authorization', 'test')
+
+    expect(result.status).toBe(200)
+    expect(result.body.data.length).toBe(6)
+    expect(result.body.paging.page).toBe(1)
+    expect(result.body.paging.totalPage).toBe(1)
+    expect(result.body.paging.totalItems).toBe(6)
+  });
+
+  it('should can search using email', async function () {
+    const result = await supertest(web)
+    .get('/api/contacts')
+    .query({
+      phone: '081231231231'
+    })
+    .set('Authorization', 'test')
+
+    expect(result.status).toBe(200)
+    expect(result.body.data.length).toBe(6)
+    expect(result.body.paging.page).toBe(1)
+    expect(result.body.paging.totalPage).toBe(1)
+    expect(result.body.paging.totalItems).toBe(6)
   });
 
 })

@@ -3,7 +3,7 @@ import { authMiddleware } from "../middleware/authMiddleware.js";
 import { getController, logoutController, updateController } from "../controller/userController.js";
 import {
   contactCreateController, contactDeleteController,
-  contactGetController,
+  contactGetController, contactSearchController,
   contactUpdateController,
 } from "../controller/contactController.js";
 
@@ -19,3 +19,4 @@ userRouter.post('/api/contacts', contactCreateController)
 userRouter.get('/api/contacts/:contactId', contactGetController)
 userRouter.put('/api/contacts/:contactId', contactUpdateController)
 userRouter.delete('/api/contacts/:contactId', contactDeleteController)
+userRouter.get('/api/contacts/', contactSearchController)
