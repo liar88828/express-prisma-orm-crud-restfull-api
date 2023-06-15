@@ -91,6 +91,7 @@ export const removeAllTestAddress = async () => {
     }
   })
 }
+
 export const createAddress = {
   street: "jalanTest",
   city: "kotaTest",
@@ -98,10 +99,10 @@ export const createAddress = {
   country: "indonesia",
   postal_code: "123123"
 }
+// export let data = Object.freeze(createAddress)
 
 export const createAdressDataTest = async () => {
   const contact = await getTestContact()
-  createAddress
   createAddress.contactId = contact.id
   await prismaClient.address.create({ data: createAddress })
 }
