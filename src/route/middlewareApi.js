@@ -6,6 +6,7 @@ import {
   contactGetController, contactSearchController,
   contactUpdateController,
 } from "../controller/contactController.js";
+import { createAddressController, getAddressController } from "../controller/addressController.js";
 
 export const userRouter = new express.Router()
 userRouter.use(authMiddleware)
@@ -20,3 +21,7 @@ userRouter.get('/api/contacts/:contactId', contactGetController)
 userRouter.put('/api/contacts/:contactId', contactUpdateController)
 userRouter.delete('/api/contacts/:contactId', contactDeleteController)
 userRouter.get('/api/contacts/', contactSearchController)
+
+//Address API
+userRouter.post('/api/contacts/:contactId/addresses', createAddressController)
+userRouter.get('/api/contacts/:contactId/addresses/:addressId', getAddressController)

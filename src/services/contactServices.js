@@ -48,7 +48,10 @@ export const contactGetServices = async (user, contactId) => {
 export const contactUpdateServices = async (user, request) => {
   const contact = validate(updateContactValidation, request)
   const totalContactInDatabase = await prismaClient.contact.count({
-    where: { username: user.username, id: contact.id }
+    where: {
+      username: user.username,
+      id: contact.id
+    }
   })
   if (totalContactInDatabase !== 1) throw  new ResponseError(404, 'contact is not found')
   // console.log(totalContactInDatabase)
@@ -73,7 +76,11 @@ export const contactUpdateServices = async (user, request) => {
 export const contactDeleteServices = async (user, contactId) => {
   contactId = validate(getContactValidation, contactId)
 
-  const totalInDatabase = await prismaClient.contact.count({ where: { id: contactId, username: user.username } })
+  const totalInDatabase = await prismaClient.contact.count({
+    where: {
+      id: contactId, username: user.username
+    }
+  })
   if (totalInDatabase !== 1) {
     throw new ResponseError(404, 'contact is not found')
   }

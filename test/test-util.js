@@ -35,6 +35,7 @@ export const removeAfterTestUser = async () => {
 }
 export const createTestUser = async () => {
   userDataTest.password = await bcrypt.hash('rahasia', 10)
+  // console.log(userDataTest.password)
   await prismaClient.user.create({
     data: userDataTest
   })
@@ -78,5 +79,38 @@ export const createManyContactTest = async () => {
 export const getTestContact = async () => {
   return prismaClient.contact.findFirst({
     where: { username: 'test' }
+  })
+}
+
+export const removeAllTestAddress = async () => {
+  await prismaClient.address.deleteMany({
+    where: {
+      Contact: {
+        username: 'test'
+      }
+    }
+  })
+}
+export const createAddress = {
+  street: "jalanTest",
+  city: "kotaTest",
+  province: "provinceTest",
+  country: "indonesia",
+  postal_code: "123123"
+}
+
+export const createAdressDataTest = async () => {
+  const contact = await getTestContact()
+  createAddress
+  createAddress.contactId = contact.id
+  await prismaClient.address.create({ data: createAddress })
+}
+export const getTestAddress = async () => {
+  return prismaClient.address.findFirst({
+    where: {
+      Contact: {
+        username: "test"
+      }
+    }
   })
 }
