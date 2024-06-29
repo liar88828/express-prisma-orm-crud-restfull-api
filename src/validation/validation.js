@@ -6,6 +6,7 @@ export const validate = (schema, request) => {
       abortEarly: false,
       allowUnknown: false
     })
+  // console.log(result)
   if (result.error) {
     throw new ResponseError(400, result.error.message)
   } else {

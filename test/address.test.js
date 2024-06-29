@@ -40,31 +40,33 @@ describe('POST /api/contacts/:contactId/addresses', () => {
 
   it('should reject is invalid', async function () {
     const testContact = await getTestContact()
-    createAddress.postal_code = ''
+    const send = structuredClone(createAddress)
+    send.province = ''
+    send.street = ''
+    send.country = ''
+    send.postal_code = ''
+    send.city = ''
     const result = await supertest(web)
     .post(`/api/contacts/${ testContact.id }/addresses`)
     .set('Authorization', 'test')
-    .send(createAddress)
+    .send(send)
     // logger.info(result.body)
     expect(result.status).toBe(400)
     expect(result.body.errors).toBeDefined()
   });
 
   it('should reject is invalid is not found ', async function () {
-    createAddress
-    createAddress.postal_code = ''
-    createAddress.country = ''
+    const send1 = structuredClone(createAddress)
     const testContact = await getTestContact()
     const result = await supertest(web)
-    .post(`/api/contacts/${ testContact.id + 1 }/addresses`)
+    .post(`/api/contacts/${ testContact.id  +1}/addresses`)
     .set('Authorization', 'test')
-    .send(createAddress)
-    // logger.info(result.body)
-    expect(result.status).toBe(400)
+    .send(send1)
+    logger.info(result.body)
+    expect(result.status).toBe(404)
     expect(result.body.errors).toBeDefined()
   });
-
-})
+   })
 
 describe('GET /api/contacts/:contactId/addresses/:addressId', () => {
   beforeEach(async () => {
@@ -78,13 +80,12 @@ describe('GET /api/contacts/:contactId/addresses/:addressId', () => {
     await removeAfterTestUser()
   })
 
-  it('should can et contact', async function () {
+  it('should can get contact', async function () {
     const testContact = await getTestContact()
     const testAddress = await getTestAddress()
     const result = await supertest(web)
     .get(`/api/contacts/${ testContact.id }/addresses/${ testAddress.id }`)
     .set('Authorization', 'test')
-    // logger.info(result.body)
     expect(result.status).toBe(200)
     expect(result.body.data.id).toBeDefined()
     expect(result.body.data.street).toBe(createAddress.street)
@@ -104,13 +105,12 @@ describe('GET /api/contacts/:contactId/addresses/:addressId', () => {
     expect(result.status).toBe(404)
   });
 
-  it('should reject if  address is not found', async function () {
+  it('should reject if address is not found', async function () {
     const testContact = await getTestContact()
     const testAddress = await getTestAddress()
     const result = await supertest(web)
     .get(`/api/contacts/${ testContact.id }/addresses/${ testAddress.id + 1 }`)
     .set('Authorization', 'test')
-    // logger.info(result.body)
     expect(result.status).toBe(404)
   });
 
@@ -148,7 +148,7 @@ describe('PUT /api/contacts/:contactId/addresses/:addressId', () => {
   it('should reject when request is invalid', async function () {
     const testContact = await getTestContact()
     const testAddress = await getTestAddress()
-    let send = createAddress
+    const send = structuredClone(createAddress)
     send.province = ''
     send.street = ''
     send.country = ''

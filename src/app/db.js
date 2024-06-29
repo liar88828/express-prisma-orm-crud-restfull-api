@@ -29,7 +29,7 @@ prismaClient.$on('error', (e) => {
 })
 
 prismaClient.$on('warn', (e) => {
-  logger.warn(e)
+  logger.warn('\u001b[1;31m',e)
 })
 
 prismaClient.$on('info', (e) => {
